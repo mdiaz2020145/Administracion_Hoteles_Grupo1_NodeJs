@@ -17,6 +17,6 @@
     "moment": "^2.29.1",
     "mongoose": "^6.2.9",
     "nodemon": "^2.0.16",
-    "underscore": "^1.13.3"
+    "underscore": "^1.13.4"
   }
 }
