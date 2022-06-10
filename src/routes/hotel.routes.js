@@ -7,9 +7,9 @@ const md_autenticacion_roles = require('../middlewares/roles');
 
 const api = express.Router();
 
-api.post('/agregarHotel', [md_autenticacion.Auth, md_autenticacion_roles.verSuperAdmin], hotelController.agregarHoteles)
-api.put('/editarHotel/:idHotel', [md_autenticacion.Auth, md_autenticacion_roles.verSuperAdmin], hotelController.editarHoteles)
-api.delete('/eliminarHotel/:idHotel', [md_autenticacion.Auth, md_autenticacion_roles.verSuperAdmin], hotelController.eliminarHoteles)
+api.post('/agregarHotel', [md_autenticacion.Auth, md_autenticacion_roles.verAdministrador], hotelController.agregarHoteles)
+api.put('/editarHotel/:idHotel', [md_autenticacion.Auth, md_autenticacion_roles.verAdministrador], hotelController.editarHoteles)
+api.delete('/eliminarHotel/:idHotel', [md_autenticacion.Auth, md_autenticacion_roles.verAdministrador], hotelController.eliminarHoteles)
 api.get('/buscarHotel', hotelController.buscarHoteles)
 api.post('/buscarHotelPorPais', md_autenticacion.Auth, hotelController.buscarHotelesPais)
 
