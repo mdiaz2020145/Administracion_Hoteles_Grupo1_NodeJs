@@ -118,14 +118,60 @@ function registrarUsuario(req,res){
 
 }
 
+//Editar usuario
+function editarUsuario(req,res){
+    var idUsuario = req.params.idUsuario; 
+    var parametros = req.body; 
+    Usuario.findByIdAndUpdate(idUsuario,parametros,{new:true},(err,usuarioActualizado)=>{
+        if (err) return res.status(500).send({ mensaje: 'Error en la peticion' });
+        if (!usuarioActualizado) return res.status(404).send({ mensaje: 'Error al editar el usuario' });
+        return res.status(200).send({usuario:usuarioActualizado})
+    })
+
+}
+
+//Eliminar Usuario
+function eliminarUsuario(req,res){
+    var id = req.params.idUsuario;
+    Usuario.findByIdAndDelete(id,(err,usuarioEliminado)=>{
+        if (err) return res.status(500).send({ mensaje: 'Error en la peticion' });
+        if (!usuarioEliminado) return res.status(404).send({ mensaje: 'Error al eliminar el usuario' });
+        return res.status(200).send({usuario:usuarioEliminado})
+    })
+
+}
 
 
+//Buscar Usuario general 
+function buscarUsuario(req,res){
+    Usuario.find((err,usuarioEncontrado)=>{
+        if (err) return res.send({ mensaje: "Error: " + err })
+        for(let i = 0; i<usuarioEncontrado.length; i++){
 
+        }
+        return res.status(200).send({usuario:usuarioEncontrado})
+    })
+}
+
+//Buscar usuario por ID
+function buscarUsuarioID(req,res){
+    var idUsuario = req.params.idUsuario;
+    Usuario.findById(idUsuario,(err,usuarioEncontrado)=>{
+        if (err) return res.status(500).send({ mensaje: 'Error en la peticion' });
+        if (!usuarioEncontrado) return res.status(404).send({ mensaje: 'Error al obtener los datos' });
+
+        return res.status(200).send({usuario:usuarioEncontrado})
+    })
+}
 
 module.exports ={
     registrarSuperAdmin,
     login,
     registrarAdminHoteles,
-    registrarUsuario
+    registrarUsuario,
+    editarUsuario,
+    eliminarUsuario,
+    buscarUsuario,
+    buscarUsuarioID
 
 }
