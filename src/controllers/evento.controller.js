@@ -59,13 +59,13 @@ function eliminarEvento(req, res) {
 
 //Buscar Evento 
 function buscarEvento(req, res) {
-    evento.find((err, eventoEncontrado) => {
-        if (err) return res.send({ mensaje: "Error: " + err })
-        for (let i = 0; i < eventoEncontrado.length; i++) {
-        }
-        return res.status(200).send({ Evento: eventoEncontrado })
+    evento.find({idAdmin: req.user.sub},(err, eventosEncontrados) => {
+        if (err) return res.status(500).send({ mensaje: 'Error en la peticion' });
+        if (!eventosEncontrados) return res.status(404).send({ mensaje: 'Error al obtener los eventos' });
+        return res.status(200).send({mensaje: "los eventos se han encontrado con exito", eventos: eventosEncontrados })
     })
 }
+
 
 //Buscar Evento por ID
 function buscarEventoID(req, res) {
