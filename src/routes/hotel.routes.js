@@ -12,5 +12,6 @@ api.put('/editarHotel/:idHotel', [md_autenticacion.Auth, md_autenticacion_roles.
 api.delete('/eliminarHotel/:idHotel', [md_autenticacion.Auth, md_autenticacion_roles.verAdministrador], hotelController.eliminarHoteles)
 api.get('/buscarHotel', hotelController.buscarHoteles)
 api.post('/buscarHotelPorPais', md_autenticacion.Auth, hotelController.buscarHotelesPais)
+api.get('/buscarHotelPorId/:idHotel', md_autenticacion.Auth, hotelController.buscarHotelPorId)
 
 module.exports = api;

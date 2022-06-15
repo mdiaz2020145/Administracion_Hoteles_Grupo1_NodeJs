@@ -98,10 +98,21 @@ function buscarHotelesPais(req, res) {
     }
 }
 
+function buscarHotelPorId(req, res) {
+    let idHot = req.params.idHotel;
+
+    Hotel.findById(idHot, (err, buscarHoteles) => {
+        if (err) return res.status(404).send({ mensaje: 'Error en la peticion al encontrar' });
+        if (!buscarHoteles) return res.status(404).send({ mensaje: 'Tiene datos vacios' });
+        return res.status(200).send({ mensaje: buscarHoteles })
+    })
+}
+
 module.exports = {
     agregarHoteles,
     editarHoteles,
     eliminarHoteles,
     buscarHoteles,
-    buscarHotelesPais
+    buscarHotelesPais,
+    buscarHotelPorId
 }
