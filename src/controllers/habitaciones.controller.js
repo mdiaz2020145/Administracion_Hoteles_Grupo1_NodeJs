@@ -1,4 +1,5 @@
 const Habitacion = require('../models/habitacion.model')
+const Hoteles = require('../models/hotel.model')
 const underscore = require('underscore')
 const Hotel = require('../models/hotel.model')
 
@@ -11,20 +12,20 @@ function agregarHabitacion(req, res) {
         Habitacion.findOne({ numeroDeHabitacion: parametros.numeroDeHabitacion }, (err, habitcacionEncontrada) => {
             if (err) return res.status(500).send({ mensaje: "Error en la peticion" })
             if (underscore.isEmpty(habitcacionEncontrada)) {
-                Hotel.findOne({ idAdmin: req.user.sub, nombre: { $regex: parametros.hotel, $options:'i'} }, (err, hotelEncontrado) => {
-                    if (err) return res.status(500).send({ mensaje: "Error en la peticion" + err})
+                Hotel.findOne({ idAdmin: req.user.sub, nombre: { $regex: parametros.hotel, $options: 'i' } }, (err, hotelEncontrado) => {
+                    if (err) return res.status(500).send({ mensaje: "Error en la peticion" + err })
                     if (!underscore.isEmpty(hotelEncontrado)) {
                         habitacionModel.numeroDeHabitacion = parametros.numeroDeHabitacion
                         habitacionModel.precio = parametros.precio
                         habitacionModel.disponible = true
-                        habitacionModel.idAdmin=req.user.sub
-                        habitacionModel.idHotel=hotelEncontrado._id
-                        if(parametros.descripcion) habitacionModel.descripcion=parametros.descripcion
+                        habitacionModel.idAdmin = req.user.sub
+                        habitacionModel.idHotel = hotelEncontrado._id
+                        if (parametros.descripcion) habitacionModel.descripcion = parametros.descripcion
                         habitacionModel.save((err, habitacionCreada) => {
                             return res.status(200).send({ mensaje: "la habitacion se ha creado con exito", habitacion: habitacionCreada })
                         })
-                    }else{
-                        return res.status(500).send({ mensaje: "El hotel al que desea agregar la habitacion no existe" }) 
+                    } else {
+                        return res.status(500).send({ mensaje: "El hotel al que desea agregar la habitacion no existe" })
                     }
                 })
             } else {
@@ -43,7 +44,7 @@ function editarHabitacion(req, res) {
     Habitacion.findByIdAndUpdate(idHabitacion, parametros, { new: true }, (err, habitacionEditada) => {
         if (err) return res.status(500).send({ mensaje: 'Error en la peticion' });
         if (!habitacionEditada) return res.status(404).send({ mensaje: 'Error al editar el la habitacion' });
-        return res.status(200).send({mensaje: "la habitacion se ha editado con exito", habitacion: habitacionEditada })
+        return res.status(200).send({ mensaje: "la habitacion se ha editado con exito", habitacion: habitacionEditada })
     })
 }
 
@@ -53,16 +54,16 @@ function eliminarHabitacion(req, res) {
     Habitacion.findByIdAndDelete(idHabitacion, (err, habitacionEliminada) => {
         if (err) return res.status(500).send({ mensaje: 'Error en la peticion' });
         if (!habitacionEliminada) return res.status(404).send({ mensaje: 'Error al eliminar la habitacion' });
-        return res.status(200).send({mensaje: "la habitacion se ha eliminado con exito", habitacion: habitacionEliminada });
+        return res.status(200).send({ mensaje: "la habitacion se ha eliminado con exito", habitacion: habitacionEliminada });
     })
 }
 
 //listar todas las habitaciones por hotel
 function buscarHabitaciones(req, res) {
-    Habitacion.find({idAdmin: req.user.sub},(err, habitacionesEncontradas) => {
+    Habitacion.find({ idAdmin: req.user.sub }, (err, habitacionesEncontradas) => {
         if (err) return res.status(500).send({ mensaje: 'Error en la peticion' });
         if (!habitacionesEncontradas) return res.status(404).send({ mensaje: 'Error al obtener las habitaciones' });
-        return res.status(200).send({mensaje: "las habitaciones se han encontrado con exito", habitaciones: habitacionesEncontradas })
+        return res.status(200).send({ mensaje: "las habitaciones se han encontrado con exito", habitaciones: habitacionesEncontradas })
     })
 }
 
@@ -72,8 +73,28 @@ function buscarHabitacionId(req, res) {
     Habitacion.findById(idHabitacion, (err, habitacionEncontrada) => {
         if (err) return res.status(500).send({ mensaje: 'Error en la peticion' });
         if (!habitacionEncontrada) return res.status(404).send({ mensaje: 'Error al obtener la habitacion' });
-        return res.status(200).send({ mensaje: "la habitacion se ha encontrado con exito", habitacion: habitacionEncontrada})
+        return res.status(200).send({ mensaje: "la habitacion se ha encontrado con exito", habitacion: habitacionEncontrada })
     })
+}
+// habitaciones disponibles
+function habitacionesDisponibles(req, res) {
+    let contador = 0;
+    let parametros = req.body;
+    if (parametros.nombre) {
+        Hoteles.findOne({ nombre: parametros.nombre }, (err, hotelEncontrado) => {
+            if (err) return res.status(500).send({ mensaje: 'Error en la peticion' });
+            if (underscore.isEmpty(hotelEncontrado)) return res.status(404).send({ mensaje: 'Error al obtener el hotel' });
+
+            Habitacion.find({ idHotel: hotelEncontrado._id, disponible: true }, (err, habitacioDisponible) => {
+                if (err) return res.status(500).send({ mensaje: 'Error en la peticion' });
+                if (!habitacioDisponible) return res.status(404).send({ mensaje: 'Error al obtener el hotel' });
+                habitacioDisponible.forEach(habitaciones => { habitaciones.nombre, contador++; })
+                return res.status(200).send({ habitacion: contador })
+            })
+        })
+    } else {
+        return res.status(404).send({ mensaje: 'No ha ingresado todos los datos' })
+    }
 }
 
 module.exports = {
@@ -81,5 +102,6 @@ module.exports = {
     editarHabitacion,
     eliminarHabitacion,
     buscarHabitaciones,
-    buscarHabitacionId
+    buscarHabitacionId,
+    habitacionesDisponibles
 }
