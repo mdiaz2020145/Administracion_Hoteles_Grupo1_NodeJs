@@ -40,10 +40,10 @@ function editarHoteles(req, res) {
     } else {
         Hotel.findById(idH, (err, hotelesEncontrados) => {
             if (err) return res.status(404).send({ mensaje: 'Error en la peticion al encontrar' });
-            if (underscore.isEmpty(hotelesEncontrados)) {
+            if (!hotelesEncontrados) {
                 return res.status(404).send({ mensaje: 'No existe un hotel con ese id' })
             } else {
-                if (hotelesEncontrados.idAdmin === req.user.sub) {
+                if (hotelesEncontrados.idAdmin == req.user.sub) {
                     Hotel.findByIdAndUpdate(idH, parametros, { new: true }, (err, hotelEditado) => {
                         if (err) return res.status(404).send({ mensaje: 'Error en la peticion al encontrar' });
                         return res.status(200).send({ mensaje: hotelEditado })
@@ -63,7 +63,7 @@ function eliminarHoteles(req, res) {
         if (underscore.isEmpty(hotelesEncontrados)) {
             return res.status(404).send({ mensaje: 'No existe un hotel con ese id' })
         } else {
-            if (hotelesEncontrados.idAdmin === req.user.sub) {
+            if (hotelesEncontrados.idAdmin == req.user.sub) {
                 Hotel.findByIdAndDelete(idH, (err, hotelEditado) => {
                     if (err) return res.status(404).send({ mensaje: 'Error en la peticion al encontrar' });
                     return res.status(200).send({ mensaje: hotelEditado })
