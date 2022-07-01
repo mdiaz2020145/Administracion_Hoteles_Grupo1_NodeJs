@@ -7,9 +7,9 @@ const md_autenticacion_roles = require('../middlewares/roles');
 
 const api = express.Router();
 
-api.post('/agregarEvento',[md_autenticacion.Auth, md_autenticacion_roles.verAdministrador],EventoController.agregarEvento);
-api.put('/editarEvento/:idEvento',[md_autenticacion.Auth, md_autenticacion_roles.verAdministrador],EventoController.editarEvento);
-api.delete('/eliminarEvento/:idEvento',[md_autenticacion.Auth, md_autenticacion_roles.verAdministrador],EventoController.eliminarEvento);
-api.get('/buscarEvento',[md_autenticacion.Auth, md_autenticacion_roles.verAdministrador],EventoController.buscarEvento);
-api.get('/buscarEventoPorID/:idEvento',[md_autenticacion.Auth, md_autenticacion_roles.verAdministrador],EventoController.buscarEventoID);
+api.post('/agregarEvento', [md_autenticacion.Auth, md_autenticacion_roles.verAdministrador], EventoController.agregarEvento);
+api.put('/editarEvento/:idEvento', [md_autenticacion.Auth, md_autenticacion_roles.verAdministrador], EventoController.editarEvento);
+api.delete('/eliminarEvento/:idEvento', [md_autenticacion.Auth, md_autenticacion_roles.verAdministrador], EventoController.eliminarEvento);
+api.get('/buscarEvento/:idHotel', [md_autenticacion.Auth, md_autenticacion_roles.verAdministrador], EventoController.buscarEvento);
+api.get('/buscarEventoPorID/:idEvento', [md_autenticacion.Auth, md_autenticacion_roles.verAdministrador], EventoController.buscarEventoID);
 module.exports = api;
