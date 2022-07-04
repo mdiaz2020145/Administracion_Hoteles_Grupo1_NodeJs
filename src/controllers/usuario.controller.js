@@ -94,7 +94,7 @@ function registrarUsuario(req, res) {
     var parametros = req.body;
     var usuarioModelo = new Usuario();
 
-    if ({ nombre: parametros.nombre, email: parametros.email, password: parametros.password, rol: parametros.rol }) {
+    if ( parametros.nombre, parametros.email, parametros.password) {
         usuarioModelo.nombre = parametros.nombre;
         usuarioModelo.email = parametros.email;
         usuarioModelo.password = parametros.password;
@@ -116,6 +116,8 @@ function registrarUsuario(req, res) {
             }
 
         })
+    }else{
+        return res.status(500).send({ mensaje: 'Llene todos los campos' });
     }
 
 }
