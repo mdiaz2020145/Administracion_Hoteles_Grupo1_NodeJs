@@ -9,28 +9,25 @@ const underscore = require('underscore');
 function agregarEvento(req, res) {
     var parametros = req.body;
     var eventoModel = new evento;
-    if (parametros.nombreEvento, parametros.descripcion, parametros.precio) {
-        evento.findOne({ nombreEvento: parametros.nombreEvento }, (err, eventoAgregado) => {
-            if (err) return res.status(404).send({ mensaje: 'Error en la peticion al encontrar' });
-            if (underscore.isEmpty(eventoAgregado)) {
-                Hotel.findOne({ nombre: parametros.nombreHotel }, (err, hotelEncontrado) => {
-                    eventoModel.nombreEvento = parametros.nombreEvento;
-                    eventoModel.descripcion = parametros.descripcion;
-                    eventoModel.precio = parametros.precio;
-                    eventoModel.idAdmin = req.user.sub;
-                    eventoModel.idHotel = hotelEncontrado._id;
-                    eventoModel.save((err, eventoGuardado) => {
-                        if (err) return res.status(404).send({ mensaje: 'Error en la peticion al guardar' })
-                        return res.status(200).send({ mensaje: eventoGuardado })
-                    })
+    evento.findOne({ nombreEvento: parametros.idHotel }, (err, eventoAgregado) => {
+        if (err) return res.status(404).send({ mensaje: 'Error en la peticion al encontrar' });
+        if (underscore.isEmpty(eventoAgregado)) {
+            Hotel.findById(parametros.idHotel, (err, hotelEncontrado) => {
+                eventoModel.nombreEvento = parametros.nombreEvento;
+                eventoModel.descripcion = parametros.descripcion;
+                eventoModel.precio = parametros.precio;
+                eventoModel.idAdmin = req.user.sub;
+                eventoModel.idHotel = hotelEncontrado._id;
+                eventoModel.save((err, eventoGuardado) => {
+                    if (err) return res.status(404).send({ mensaje: 'Error en la peticion al guardar' })
+                    return res.status(200).send({ mensaje: eventoGuardado })
                 })
-            } else {
-                return res.status(200).send({ mensaje: 'Ya existe un evento con ese nombre' })
-            }
-        })
-    } else {
-        return res.status(500).send({ mensaje: 'No has llenado todos los campos' })
-    }
+            })
+        } else {
+            return res.status(200).send({ mensaje: 'Ya existe un evento con ese nombre' })
+        }
+    })
+
 
 }
 
@@ -59,8 +56,8 @@ function eliminarEvento(req, res) {
 
 //Buscar Evento 
 function buscarEvento(req, res) {
-    let idH = req.parametros.idHotel
-    evento.find({ idHotel: idH, idAdmin: req.user.sub }, (err, eventosEncontrados) => {
+    let idH = req.params.idHotel
+    evento.find({ idHotel: idH }, (err, eventosEncontrados) => {
         if (err) return res.status(500).send({ mensaje: 'Error en la peticion' });
         if (!eventosEncontrados) return res.status(404).send({ mensaje: 'Error al obtener los eventos' });
         return res.status(200).send({ mensaje: "los eventos se han encontrado con exito", eventos: eventosEncontrados })
@@ -74,7 +71,7 @@ function buscarEventoID(req, res) {
     evento.findById(idEvento, (err, eventoEncontrado) => {
         if (err) return res.status(500).send({ mensaje: 'Error en la peticion' });
         if (!eventoEncontrado) return res.status(404).send({ mensaje: 'Error al obtener los datos' });
-        return res.status(200).send({ Evento: eventoEncontrado })
+        return res.status(200).send({ eventos: eventoEncontrado })
     })
 }
 
