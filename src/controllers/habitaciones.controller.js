@@ -5,14 +5,15 @@ const Hotel = require('../models/hotel.model')
 
 //agregar habitaciones
 function agregarHabitacion(req, res) {
+    var idHotel = req.params.idHotel
     var parametros = req.body
     var habitacionModel = new Habitacion()
 
-    if (parametros.numeroDeHabitacion, parametros.precio, parametros.hotel) {
+    if (parametros.numeroDeHabitacion, parametros.precio) {
         Habitacion.findOne({ numeroDeHabitacion: parametros.numeroDeHabitacion }, (err, habitcacionEncontrada) => {
             if (err) return res.status(500).send({ mensaje: "Error en la peticion" })
             if (underscore.isEmpty(habitcacionEncontrada)) {
-                Hotel.findOne({ idAdmin: req.user.sub, nombre: { $regex: parametros.hotel, $options: 'i' } }, (err, hotelEncontrado) => {
+                Hotel.findOne({idHotel: idHotel }, (err, hotelEncontrado) => {
                     if (err) return res.status(500).send({ mensaje: "Error en la peticion" + err })
                     if (!underscore.isEmpty(hotelEncontrado)) {
                         habitacionModel.numeroDeHabitacion = parametros.numeroDeHabitacion
@@ -60,7 +61,8 @@ function eliminarHabitacion(req, res) {
 
 //listar todas las habitaciones por hotel
 function buscarHabitaciones(req, res) {
-    Habitacion.find({ idAdmin: req.user.sub }, (err, habitacionesEncontradas) => {
+    var idHotel=req.params.idHotel;
+    Habitacion.find({idHotel: idHotel}, (err, habitacionesEncontradas) => {
         if (err) return res.status(500).send({ mensaje: 'Error en la peticion' });
         if (!habitacionesEncontradas) return res.status(404).send({ mensaje: 'Error al obtener las habitaciones' });
         return res.status(200).send({ mensaje: "las habitaciones se han encontrado con exito", habitaciones: habitacionesEncontradas })
