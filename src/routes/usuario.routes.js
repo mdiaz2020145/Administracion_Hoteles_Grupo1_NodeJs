@@ -13,6 +13,9 @@ api.post('/registrarUsuario',usuarioControlador.registrarUsuario);
 api.put('/editarUsuario/:idUsuario',usuarioControlador.editarUsuario);
 api.delete('/eliminarUsuario/:idUsuario',usuarioControlador.eliminarUsuario);
 api.get('/buscarUsuario',usuarioControlador.buscarUsuario);
-api.get('/buscarUsuarioID/:idUsuario',usuarioControlador.buscarUsuarioID)
+api.get('/buscarUsuarioID/:idUsuario',usuarioControlador.buscarUsuarioID);
+api.put('/reservarHabitacion/:idHabitacion', md_autenticacion.Auth, usuarioControlador.reservacionHabitaciones);
+api.put('/reservarEvento/:idEvento', md_autenticacion.Auth, usuarioControlador.reservacionEvento);
+api.put('/reservarServicio/:idServicio', md_autenticacion.Auth, usuarioControlador.reservacionServicio);
 
 module.exports = api;
