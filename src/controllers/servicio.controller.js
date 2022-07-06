@@ -5,13 +5,14 @@ const underscore = require('underscore');
 function agregarServicio(req, res) {
     var parametros = req.body;
     var servicioModel = new Servicio;
+    var idHotel = req.params.idHotel
 
-    if (parametros.nombreServicio, parametros.precio, parametros.descripcion, parametros.hotel) {
+    if (parametros.nombreServicio, parametros.precio, parametros.descripcion) {
         Servicio.findOne({ nombreServicio: parametros.nombreServicio }, (err, servicioEncontrado) => {
             if (err) return res.status(500).send({ mensaje: "Error en la peticion" })
             if (underscore.isEmpty(servicioEncontrado)) {
 
-                Hotel.findOne({ idAdmin: req.user.sub, nombre: { $regex: parametros.hotel, $options:'i'} }, (err, hotelEncontrado) => {
+                Hotel.findOne({ idHotel: idHotel }, (err, hotelEncontrado) => {
                     if (err) return res.status(500).send({ mensaje: "Error en la peticion" + err})
                     if (!underscore.isEmpty(hotelEncontrado)) {
                         servicioModel.nombreServicio = parametros.nombreServicio;
@@ -88,6 +89,16 @@ function buscarServicioId(req, res) {
     })
 }
 
+//Id por hotel
+function obtenerServicio(req,res){
+    var idHotel=req.params.idHotel;
+
+    Servicio.find({idHotel: idHotel},(err,servicioEncontrado)=>{
+        if (err) return res.status(500).send({ mensaje: 'Error en la peticion' });
+        if (!servicioEncontrado) return res.status(404).send({ mensaje: 'Error al obtener los Servicios' });
+        return res.status(200).send({ mensaje: "los servicios se han encontrado con exito", servicios: servicioEncontrado })
+    })
+}
 
 module.exports={
     agregarServicio,
@@ -95,5 +106,6 @@ module.exports={
     eliminarServicio,
     buscarServicios,
     obtenerServicioPorNombre,
-    buscarServicioId
+    buscarServicioId,
+    obtenerServicio
 }
