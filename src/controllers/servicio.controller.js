@@ -7,8 +7,8 @@ function agregarServicio(req, res) {
     var servicioModel = new Servicio;
     var idHotel = req.params.idHotel
 
-    if (parametros.nombreServicio, parametros.precio, parametros.descripcion) {
-        Servicio.findOne({ nombreServicio: parametros.nombreServicio }, (err, servicioEncontrado) => {
+    if (parametros.nombreServicio, parametros.precio) {
+        Servicio.findOne({ nombreServicio: parametros.nombreServicio, idHotel: idHotel}, (err, servicioEncontrado) => {
             if (err) return res.status(500).send({ mensaje: "Error en la peticion" })
             if (underscore.isEmpty(servicioEncontrado)) {
 
@@ -17,9 +17,9 @@ function agregarServicio(req, res) {
                     if (!underscore.isEmpty(hotelEncontrado)) {
                         servicioModel.nombreServicio = parametros.nombreServicio;
                         servicioModel.precio = parametros.precio;
-                        servicioModel.descripcion = parametros.descripcion;
+                        if (parametros.descripcion) servicioModel.descripcion = parametros.descripcion;
                         servicioModel.idAdmin=req.user.sub;
-                        servicioModel.idHotel=hotelEncontrado._id;
+                        servicioModel.idHotel=idHotel;
                         servicioModel.save((err, servicioGuardado) => {
                             if (err) return res.status(404).send({ mensaje: 'Error en la peticion al guardar' })
                             return res.status(200).send({ mensaje: servicioGuardado })

@@ -10,7 +10,7 @@ function agregarHabitacion(req, res) {
     var habitacionModel = new Habitacion()
 
     if (parametros.numeroDeHabitacion, parametros.precio) {
-        Habitacion.findOne({ numeroDeHabitacion: parametros.numeroDeHabitacion }, (err, habitcacionEncontrada) => {
+        Habitacion.findOne({ numeroDeHabitacion: parametros.numeroDeHabitacion, idHotel:idHotel }, (err, habitcacionEncontrada) => {
             if (err) return res.status(500).send({ mensaje: "Error en la peticion" })
             if (underscore.isEmpty(habitcacionEncontrada)) {
                 Hotel.findOne({idHotel: idHotel }, (err, hotelEncontrado) => {
@@ -20,7 +20,7 @@ function agregarHabitacion(req, res) {
                         habitacionModel.precio = parametros.precio
                         habitacionModel.disponible = true
                         habitacionModel.idAdmin = req.user.sub
-                        habitacionModel.idHotel = hotelEncontrado._id
+                        habitacionModel.idHotel = idHotel
                         if (parametros.descripcion) habitacionModel.descripcion = parametros.descripcion
                         habitacionModel.save((err, habitacionCreada) => {
                             return res.status(200).send({ mensaje: "la habitacion se ha creado con exito", habitacion: habitacionCreada })
