@@ -11,6 +11,6 @@ api.post('/agregarHabitacion/:idHotel', [md_autenticacion.Auth, md_autenticacion
 api.put('/editarHabitacion/:idHabitacion', [md_autenticacion.Auth, md_autenticacion_roles.verAdministrador], habitacionController.editarHabitacion);
 api.delete('/eliminarHabitacion/:idHabitacion', [md_autenticacion.Auth, md_autenticacion_roles.verAdministrador], habitacionController.eliminarHabitacion);
 api.get('/buscarHabitaciones/:idHotel', habitacionController.buscarHabitaciones);
-api.get('/buscarHabitacionId/:idHabitacion', [md_autenticacion.Auth, md_autenticacion_roles.verAdministrador], habitacionController.buscarHabitacionId);
+api.get('/buscarHabitacionId/:idHabitacion', [md_autenticacion.Auth, /*md_autenticacion_roles.verAdministrador*/], habitacionController.buscarHabitacionId);
 api.post('/buscarHotelDisponible', habitacionController.habitacionesDisponibles);
 module.exports = api;

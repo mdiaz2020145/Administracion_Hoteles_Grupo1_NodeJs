@@ -11,5 +11,5 @@ api.post('/agregarEvento', [md_autenticacion.Auth, md_autenticacion_roles.verAdm
 api.put('/editarEvento/:idEvento', [md_autenticacion.Auth, md_autenticacion_roles.verAdministrador], EventoController.editarEvento);
 api.delete('/eliminarEvento/:idEvento', [md_autenticacion.Auth, md_autenticacion_roles.verAdministrador], EventoController.eliminarEvento);
 api.get('/buscarEvento/:idHotel', EventoController.buscarEvento);
-api.get('/buscarEventoPorID/:idEvento', [md_autenticacion.Auth, md_autenticacion_roles.verAdministrador], EventoController.buscarEventoID);
+api.get('/buscarEventoPorID/:idEvento', [md_autenticacion.Auth, /*md_autenticacion_roles.verAdministrador*/], EventoController.buscarEventoID);
 module.exports = api;
