@@ -6,6 +6,7 @@ const Servicio = require('../models/servicio.model');
 const Evento = require('../models/evento.model');
 const bcrypt = require('bcrypt-nodejs');
 const jwt = require('../services/jwt');
+underscore= require('underscore')
 
 
 //Registrar SuperAdmin 
@@ -181,37 +182,45 @@ function reservacionHabitaciones(req,res){
         if(err) return res.status(500).send({mensaje:'error en la peticion'});
         if(!habitacionEncontrada) return res.status(404).send({mensaje:'Error al encontrar la habitacion'})
 
-        Usuario.find({_id:usuario},{reservacionHabitacion:{$elementMatch:{idHabitacion: idHabitacion}}},(err,res)=>{
-            if(res == null){
-                Usuario.findByIdAndUpdate(usuario,{
-                    $push:{
-                        reservacionHabitacion:{
-                            idHabitacion:habitacionEncontrada._id,
-                            precio:habitacionEncontrada.precio
+        if(habitacionEncontrada.disponible==true){
+            Usuario.findOne({_id:usuario, reservacionHabitacion:{$elementMatch:{idHabitacion: idHabitacion}}},(err,resp)=>{
+                if(underscore.isEmpty(resp)){
+                    Usuario.findByIdAndUpdate(usuario,{
+                        $push:{
+                            reservacionHabitacion:{
+                                idHabitacion:habitacionEncontrada._id,
+                                precio:habitacionEncontrada.precio
+                            }
                         }
-                    }
-                },{new:true},(err, usuarioReservacionHabitacion)=>{
-                    if (err) return res.status(500).send({mensaje: "Error en la peticion"});
-                    if(!habitacionEncontrada) return res.status(404).send({mensaje:'Error al tratar de agregar la habitacion'});
-                    let totalReservacionHabitacion=0;
-                    for(let i=0; i<usuarioReservacionHabitacion.reservacionHabitacion.length; i++){
-                        totalReservacionHabitacion=totalReservacionHabitacion+usuarioReservacionHabitacion.reservacionHabitacion[i].precio
-                    }
-
-                    Usuario.findByIdAndUpdate(usuario, {totalReservacionHabitacion: totalReservacionHabitacion},{new:true},(err, reservacionModificada)=>{
+                    },{new:true},(err, usuarioReservacionHabitacion)=>{
                         if (err) return res.status(500).send({mensaje: "Error en la peticion"});
                         if(!habitacionEncontrada) return res.status(404).send({mensaje:'Error al tratar de agregar la habitacion'});
-                        //return res.status(200).send({mensaje:'Estupidos'})
+                        let totalReservacionHabitacion=0;
+                        for(let i=0; i<usuarioReservacionHabitacion.reservacionHabitacion.length; i++){
+                            totalReservacionHabitacion=totalReservacionHabitacion+usuarioReservacionHabitacion.reservacionHabitacion[i].precio
+                        }
+                        Habitacion.findByIdAndUpdate(idHabitacion,{disponible: false},{new:true},(err,habitacionModificada)=>{
+                            if (err) return res.status(500).send({mensaje: "Error en la peticion"});
+                            if(!habitacionModificada) return res.status(404).send({mensaje:'Error al tratar de agregar la habitacion'});
+                        })
+    
+                        Usuario.findByIdAndUpdate(usuario, {totalReservacionHabitacion: totalReservacionHabitacion},{new:true},(err, reservacionModificada)=>{
+                            if (err) return res.status(500).send({mensaje: "Error en la peticion"});
+                            if(!habitacionEncontrada) return res.status(404).send({mensaje:'Error al tratar de agregar la habitacion'});
+    
+                        })
                     })
-                })
-            }else{
-                Usuario.findByIdAndUpdate({$inc:{precio:parametros.precio}},{new:true},(err,reservacionA)=>{
-                    if (err) return res.status(500).send({mensaje: "Error en la peticion"});
-                    if(!reservacionA) return res.status(404).send({mensaje:'Error al tratar de agregar la habitacion'});
-                    return res.status(200).send({habitacion:reservacionA})
-                })
-            }
-        })
+                }else{
+                    Usuario.findByIdAndUpdate({$inc:{precio:parametros.precio}},{new:true},(err,reservacionA)=>{
+                        if (err) return res.status(500).send({mensaje: "Error en la peticion"});
+                        if(!reservacionA) return res.status(404).send({mensaje:'Error al tratar de agregar la habitacion'});
+                        return res.status(200).send({habitacion:reservacionA})
+                    })
+                }
+            })
+        }else{
+            return res.status(500).send({mensaje: "Esta habitacion ya esta reservada"})
+        }
 
         Usuario.find({_id:usuario},(err,usuarioEncontrado)=>{
             if (err) return res.status(500).send({mensaje: "Error en la peticion"});
