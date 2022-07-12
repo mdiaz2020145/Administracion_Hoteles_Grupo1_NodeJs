@@ -188,6 +188,7 @@ function reservacionHabitaciones(req,res){
                     Usuario.findByIdAndUpdate(usuario,{
                         $push:{
                             reservacionHabitacion:{
+                                numeroDeHabitacion:habitacionEncontrada.numeroDeHabitacion,
                                 idHabitacion:habitacionEncontrada._id,
                                 precio:habitacionEncontrada.precio
                             }
@@ -244,6 +245,7 @@ function reservacionEvento(req,res){
                 Usuario.findByIdAndUpdate(usuario,{
                     $push:{
                         reservacionEvento:{
+                            nombreEvento:eventoEncontrado.nombreEvento,
                             idEvento:eventoEncontrado._id,
                             precio:eventoEncontrado.precio
                         }
@@ -292,6 +294,7 @@ function reservacionServicio(req,res){
                 Usuario.findByIdAndUpdate(usuario,{
                     $push:{
                         reservacionServicio:{
+                            nombreServicio:servicioEncontrado.nombreServicio,
                             idServicio:servicioEncontrado._id,
                             precio:servicioEncontrado.precio
                         }

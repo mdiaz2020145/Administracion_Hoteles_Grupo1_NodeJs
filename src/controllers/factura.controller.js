@@ -44,7 +44,19 @@ function buscarFactura(req,res){
 
 }
 
+//Buscar factura por su id
+function buscarFacturaId(req,res){
+    var idFactura = req.params.idFactura;
+
+    factura.findById(idFactura, (err, FacturaEncontrada) => {
+        if (err) return res.status(500).send({ mensaje: 'Error en la peticion' });
+        if (!FacturaEncontrada) return res.status(404).send({ mensaje: 'Error al obtener la habitacion' });
+        return res.status(200).send({ mensaje: "la factura se ha encontrado con exito", factura: FacturaEncontrada })
+    })
+}
+
 module.exports={
     generarFactura,
-    buscarFactura
+    buscarFactura,
+    buscarFacturaId
 }

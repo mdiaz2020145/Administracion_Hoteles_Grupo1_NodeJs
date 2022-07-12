@@ -7,15 +7,17 @@ const UsuarioSchema = Schema({
     password: String,
     rol:String,
     reservacionHabitacion:[{
-        //numeroDeHabitacion:String,
+        numeroDeHabitacion:String,
         idHabitacion:{type: Schema.Types.ObjectId, ref: 'Habitacion' },
         precio:Number
     }],
     reservacionEvento:[{
+        nombreEvento:String,
         idEvento:{type: Schema.Types.ObjectId, ref: 'Evento' },
         precio:Number
     }],
     reservacionServicio:[{
+        nombreServicio:String,
         idServicio:{type: Schema.Types.ObjectId, ref: 'Servicio' },
         precio:Number
     }],

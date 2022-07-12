@@ -10,5 +10,5 @@ const api = express.Router();
 
 api.post('/generarFacutra',[md_autenticacion.Auth,md_autenticacion_roles.verUsuario],facturaController.generarFactura);
 api.get('/obtenerFacturaUsuario/:idUsuario',[md_autenticacion.Auth,md_autenticacion_roles.verUsuario],facturaController.buscarFactura);
-
+api.get('/obtenerFactura/:idFactura',[md_autenticacion.Auth,md_autenticacion_roles.verUsuario],facturaController.buscarFacturaId)
 module.exports = api;
